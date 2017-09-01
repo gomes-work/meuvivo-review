@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  review:
+    build: .
+    command: npm start
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:3.0-alpine
+    ports:
+      - "6379:6379"
+
+
