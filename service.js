@@ -1,4 +1,4 @@
-const redis = require('./redis-client.js')(':review:request:');
+const redis = require('./redis-client.js')(':review:request');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
