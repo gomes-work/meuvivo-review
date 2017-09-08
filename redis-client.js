@@ -38,13 +38,15 @@ module.exports = function (keyPrefix, config = CONFIG_REDIS) {
         .timeout(SERVICE_TIMEOUT, `[Redis] Timeout Getting Value for Key ${keyPrefix}${key}`)
         .then(JSON.parse);
     },
-    getValues() {
-      return client
-        .keys(`${keyPrefix}*`)
-        .then((keys) => {
-          return client.mget(...keys)
-            .then(values => _.zipObject(removePrefix(keyPrefix, keys), values.map(JSON.parse)));
-        });
+    getAllValues() {
+      return client.keys(`${keyPrefix}*`).then(keys => client
+          .mget(...keys)
+          .then(values => _.zipObject(removePrefix(keyPrefix, keys), values.map(JSON.parse))));
+    },
+    getValues(ids) {
+      const keys = ids.map(key => `${keyPrefix}${key}`);
+      return client.mget(...keys)
+        .then(values => _.zipObject(removePrefix(keyPrefix, keys), values.map(JSON.parse)));
     },
   };
 };

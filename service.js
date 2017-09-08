@@ -17,6 +17,9 @@ module.exports = {
     return Promise.mapSeries(_.chunk(aparelhos, 5), turnOff);
   },
   getReviews() {
-    return redis.getValues();
+    return redis.getAllValues();
+  },
+  getReviewsForIds(aparelhos) {
+    return redis.getValues(aparelhos);
   },
 };

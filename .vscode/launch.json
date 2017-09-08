@@ -7,7 +7,19 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Current File",
+      "program": "${file}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Elastic",
+      "program": "${workspaceRoot}/elastic.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Index",
       "program": "${workspaceRoot}/index.js"
     }
   ]
