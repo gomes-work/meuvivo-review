@@ -1,14 +1,14 @@
-//const consul = require('consul')({ host: process.env.CONSUL_HOST || 'localhost', promisify: true });
+const consul = require('consul')({ host: process.env.CONSUL_HOST || 'localhost', promisify: true });
 
-const numDays = 5;
-const maxPerBucket = 5;
-const maxFrequency = 10;
-const successRate = 0.7;
-const numIdsPerRun = 500;
-const dataDir = process.env.NODE_ENV === 'prod' ? '/usr/app/data/' : './data/';
-// const NUM_DAYS = 5;
+let numDays = 5;
+let maxPerBucket = 5;
+let maxFrequency = 10;
+let successRate = 0.7;
+let numIdsPerRun = 500;
 
-module.exports = {
+const dataDir = process.env.NODE_ENV === 'prod' ? '/data/' : './data/';
+
+const configs = {
   get NUM_DAYS() {
     return numDays;
   },
@@ -27,7 +27,26 @@ module.exports = {
   get DATA_DIR() {
     return dataDir;
   },
-  onConfigLoad() {
+};
 
-  },
+function onConfigLoad(fun) {
+  consul.kv.get('configuration/review')
+    .then((result) => {
+      const data = JSON.parse(result.Value);
+      numDays = data.numDays;
+      maxPerBucket = data.maxPerBucket;
+      maxFrequency = data.maxFrequency;
+      successRate = data.successRate;
+      numIdsPerRun = data.numIdsPerRun;
+
+      fun(configs);
+    })
+    .catch(err => console.log(`[Consul] Config error: ${err.message}`, err));
+}
+
+// const NUM_DAYS = 5;
+
+module.exports = {
+  configs,
+  onConfigLoad,
 };

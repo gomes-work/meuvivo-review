@@ -1,11 +1,11 @@
 FROM node:8.4-alpine
 
 EXPOSE 8080
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /app
+WORKDIR /app
 
 # Install app dependencies
-COPY . /usr/src/app/
+COPY . /app/
 RUN yarn install --production && yarn clean
 
 CMD [ "node", "index.js" ]

@@ -47,7 +47,7 @@ function createSearchObject(start, end) {
   return {
     index: 'logs-*',
     scroll: '20s',
-    size: 500,
+    size: process.env.NODE_ENV === 'prod' ? 10000 : 500,
     body: {
       sort,
       query: {

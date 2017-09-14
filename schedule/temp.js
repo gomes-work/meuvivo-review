@@ -526,6 +526,6 @@ function failure(error) {
   client.quit();
 }
 
-const keys = data.map(id => `:review:request${id}`);
+const keys = data.map(id => `:review:request:${id}`);
 client.del(...keys)
   .then(success, failure);

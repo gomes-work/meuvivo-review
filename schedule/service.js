@@ -7,14 +7,14 @@ const createLogStream = require('./log-stream');
 const { createLoginStream } = require('./login-stream');
 const { readLogsFromFile, saveLogsToFile, checkFileExists } = require('./file-handling');
 
-const { DATA_DIR } = require('./config');
+const { configs } = require('./config');
 
-const fileNameForDate = date => `${DATA_DIR}${date.toString()}.txt.gz`;
+const fileNameForDate = date => `${configs.DATA_DIR}${date.toString()}.txt.gz`;
 
 function downloadData(date) {
   console.log(`Downloading for date: ${date.toString()}`);
   const start = ZonedDateTime.of(date, LocalTime.MIN, ZoneId.of('GMT-3'));
-  const end = start.plusMinutes(1);
+  const end = process.env.NODE_ENV === 'prod' ? start.plusDays(1) : start.plusMinutes(1);
 
   const loginStream = createLoginStream(createLogStream({ start, end }));
   return saveLogsToFile(loginStream, fileNameForDate(date));

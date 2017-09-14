@@ -1,16 +1,16 @@
 const _ = require('lodash');
 
-const { MAX_PER_BUCKET, MAX_FREQUENCY, NUM_DAYS, SUCCESS_RATE } = require('./config');
+const { configs } = require('./config');
 
 function successRate(data) {
   const rate = data.reduce((x, y) => x + y[2], 0) / data.length;
-  if (rate < SUCCESS_RATE) return -Infinity;
-  return (Math.exp(1 + SUCCESS_RATE * 2) - 10) / 3;
+  if (rate < configs.SUCCESS_RATE) return -Infinity;
+  return (Math.exp(1 + configs.SUCCESS_RATE * 2) - 10) / 3;
 }
 
 function frequency(data) {
-  if (data.length > MAX_FREQUENCY) return -Infinity;
-  return Math.log(data.length) / NUM_DAYS;
+  if (data.length > configs.MAX_FREQUENCY) return -Infinity;
+  return Math.log(data.length) / configs.NUM_DAYS;
 }
 
 function perLoginType(data) {
@@ -20,7 +20,7 @@ function perLoginType(data) {
 
 function processBuckets(data) {
   const buckets = _.countBy(data, x => Math.floor(x[1] / 30));
-  const maxBucketExceeded = _.some(buckets, count => count > MAX_PER_BUCKET);
+  const maxBucketExceeded = _.some(buckets, count => count > configs.MAX_PER_BUCKET);
   if (maxBucketExceeded) {
     return -Infinity;
   }
