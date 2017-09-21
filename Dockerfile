@@ -1,12 +1,17 @@
-FROM node:8.4-alpine
+FROM node:8.5-alpine
 
 EXPOSE 8080
 RUN mkdir -p /app
 WORKDIR /app
 
+RUN apk --no-cache add bash
+
 # Install app dependencies
 COPY . /app/
-RUN yarn install --production && yarn clean
+RUN mv /app/docker-entrypoint.sh / && chmod +x /docker-entrypoint.sh
+RUN yarn install --production
 
-CMD [ "node", "index.js" ]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["node", "index.js"]
 
