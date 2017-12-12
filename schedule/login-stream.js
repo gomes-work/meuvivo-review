@@ -65,7 +65,7 @@ function loginEntryMatcher(logDataStream, observer) {
   }
 
   function onComplete() {
-    removeExpired(state.lastseen.timestamp);
+    if (state.lastseen) removeExpired(state.lastseen.timestamp);
     observer.complete();
   }
 

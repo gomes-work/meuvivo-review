@@ -26,6 +26,6 @@ onConfigLoad(({ DATA_DIR, NUM_DAYS, NUM_IDS_PER_RUN }) => {
     .tap(results => saveResults(resultsFileName, results))
     .then(results => turnOnReviewsIfNeeded(results.map(([id]) => id)))
     .then(() => { console.log('Done.'); process.exit(); })
-    .catch(console.error);
+    .catch(() => { console.error; process.exit(); });
 });
 

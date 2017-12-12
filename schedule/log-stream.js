@@ -13,7 +13,7 @@ const extractRequestType = (message) => {
 
 const filterChain = (data) => {
   const filter = !!data.installId;
-  if (!filter) console.error(`[Log Stream] Missing InstallId on Data ${data}`);
+  if (!filter) console.error(`[Log Stream] Missing InstallId on Data ${JSON.stringify(data)}`);
   return filter;
 };
 
@@ -23,10 +23,13 @@ const toEpochMilli = zoneDateTime => zoneDateTime.toInstant().toEpochMilli();
 const extractData = ({ _source }) => ({
   timestamp: toEpochMilli(parseTimestamp(_source['@timestamp'])),
   type: extractRequestType(_source.message),
-  installId: _source.fields.installId,
-  appVersion: _.get(_source, 'fields.useragent.appVersion'),
+  installId: _.get(_source, 'fields.installId')
+    || _.get(_source, 'installId')
+    || _.get(_source, 'fields.useragent.installId')
+    || _.get(_source, 'useragent.installId'),
+  appVersion: _.get(_source, 'fields.useragent.appVersion')
+    || _.get(_source, 'useragent.appVersion'),
 });
-
 
 module.exports = function createLogStream({ start, end }) {
   return findElasticDocuments(toEpochMilli(start), toEpochMilli(end))
