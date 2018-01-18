@@ -8,7 +8,7 @@ const timeRange = (start, end) => ({
   range: {
     '@timestamp': {
       gte: start,
-      le: end,
+      lte: end,
       format: 'epoch_millis',
     },
   },
